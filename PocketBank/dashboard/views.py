@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
-from PocketBank.accounts import models
+from accounts.models import UserProfile
 from finance.models import Account, Transaction, TransactionCategory
 from django.db.models import Sum
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-
-class DashboardHome(ListView):
+class DashboardHome(LoginRequiredMixin, ListView):
     model = Account
     template_name = '/dashboard/dashboard_home.html'
     context_object_name = 'accounts'

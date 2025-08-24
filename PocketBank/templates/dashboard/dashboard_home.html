@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+
+  <h2>Welcome, {{ user.username }} 👋</h2>
+  <p>Here’s a quick overview of your finances.</p>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card shadow p-3 mb-4">
+        <h5>Total Income</h5>
+        <p class="text-success fw-bold">${{ total_income }}</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow p-3 mb-4">
+        <h5>Total Expense</h5>
+        <p class="text-danger fw-bold">${{ total_expense }}</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Your Accounts</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>Balance</th>
+        <th>Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for account in accounts %}
+      <tr>
+        <td>{{ account.name }}</td>
+        <td>${{ account.balance }}</td>
+        <td>{{ account.account_type }}</td>
+        <td>
+          <a href="{% url 'account_details' account.pk %}" class="btn btn-sm btn-primary">
+            View Details
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">No accounts found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="mt-4">
+    <a href="{% url 'categories' %}" class="btn btn-outline-secondary">Category Report</a>
+    <a href="{% url 'summery' %}" class="btn btn-outline-secondary">Monthly Summary</a>
+  </div>
+
+</div>
+{% endblock %}
