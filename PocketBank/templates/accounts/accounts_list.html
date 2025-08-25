@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Your Accounts</h2>
+<a href="{% url 'account_create' %}" class="btn btn-success">New Account</a>
+
+<ul>
+    {% for account in object_list %}
+        <li>
+            {{ account.name }} - ${{ account.balance }}
+            <a href="{% url 'account_edit' account.pk %}">Edit</a>
+            <a href="{% url 'account_delete' account.pk %}">Delete</a>
+        </li>
+    {% empty %}
+        <li>No accounts yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
