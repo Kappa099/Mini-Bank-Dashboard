@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Transaction Categories</h2>
+<a href="{% url 'finance_category_create' %}" class="btn btn-success">New Category</a>
+
+<ul>
+    {% for category in categories %}
+        <li style="color: '{{ category.color }}'">
+            {{ category.name }}
+            <a href="{% url 'finance_category_edit' category.pk %}">Edit</a> |
+            <a href="{% url 'finance_category_delete' category.pk %}">Delete</a>
+        </li>
+    {% empty %}
+        <li>No categories yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

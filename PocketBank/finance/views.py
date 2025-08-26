@@ -1,2 +1,117 @@
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from .models import Account, Transaction, TransactionCategory
 from django.shortcuts import render
-# Create your views here.
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def FinanceHome(request):
+    return render(request, 'finance/finance_home.html')
+
+
+class AccountListView(LoginRequiredMixin, ListView):
+    model = Account
+    template_name = 'finance/account_list.html'
+    context_object_name = 'accounts'
+
+    def get_queryset(self):
+        return Account.objects.filter(owner=self.request.user)
+
+class AccountCreateView(LoginRequiredMixin, CreateView):
+    model = Account
+    fields = ['name', 'balance', 'account_type']
+    template_name = 'finance/account_form.html'
+    success_url = reverse_lazy('finance_account_list')
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+class AccountUpdateView(LoginRequiredMixin, UpdateView):
+    model = Account
+    fields = ['name', 'balance', 'account_type']
+    template_name = 'finance/account_form.html'
+    success_url = reverse_lazy('finance_account_list')
+
+    def get_queryset(self):
+        return Account.objects.filter(owner=self.request.user)
+
+class AccountDeleteView(LoginRequiredMixin, DeleteView):
+    model = Account
+    template_name = 'finance/account_confirm_delete.html'
+    success_url = reverse_lazy('finance_account_list')
+
+    def get_queryset(self):
+        return Account.objects.filter(owner=self.request.user)
+
+
+class CategoryListView(LoginRequiredMixin, ListView):
+    model = TransactionCategory
+    template_name = 'finance/category_list.html'
+    context_object_name = 'categories'
+
+    def get_queryset(self):
+        return TransactionCategory.objects.filter(user=self.request.user)
+
+class CategoryCreateView(LoginRequiredMixin, CreateView):
+    model = TransactionCategory
+    fields = ['name', 'color']
+    template_name = 'finance/category_form.html'
+    success_url = reverse_lazy('finance_category_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+class CategoryUpdateView(LoginRequiredMixin, UpdateView):
+    model = TransactionCategory
+    fields = ['name', 'color']
+    template_name = 'finance/category_form.html'
+    success_url = reverse_lazy('finance_category_list')
+
+    def get_queryset(self):
+        return TransactionCategory.objects.filter(user=self.request.user)
+
+class CategoryDeleteView(LoginRequiredMixin, DeleteView):
+    model = TransactionCategory
+    template_name = 'finance/category_confirm_delete.html'
+    success_url = reverse_lazy('finance_category_list')
+
+    def get_queryset(self):
+        return TransactionCategory.objects.filter(user=self.request.user)
+
+
+class TransactionListView(LoginRequiredMixin, ListView):
+    model = Transaction
+    template_name = 'finance/transaction_list.html'
+    context_object_name = 'transactions'
+
+    def get_queryset(self):
+        return Transaction.objects.filter(account__owner=self.request.user)
+
+class TransactionCreateView(LoginRequiredMixin, CreateView):
+    model = Transaction
+    fields = ['account', 'amount', 'category', 'description', 'date', 'transaction_type']
+    template_name = 'finance/transaction_form.html'
+    success_url = reverse_lazy('finance_transaction_list')
+
+    def get_queryset(self):
+        return Transaction.objects.filter(account__owner=self.request.user)
+
+class TransactionUpdateView(LoginRequiredMixin, UpdateView):
+    model = Transaction
+    fields = ['account', 'amount', 'category', 'description', 'date', 'transaction_type']
+    template_name = 'finance/transaction_form.html'
+    success_url = reverse_lazy('finance_transaction_list')
+
+    def get_queryset(self):
+        return Transaction.objects.filter(account__owner=self.request.user)
+
+class TransactionDeleteView(LoginRequiredMixin, DeleteView):
+    model = Transaction
+    template_name = 'finance/transaction_confirm_delete.html'
+    success_url = reverse_lazy('finance_transaction_list')
+
+    def get_queryset(self):
+        return Transaction.objects.filter(account__owner=self.request.user)

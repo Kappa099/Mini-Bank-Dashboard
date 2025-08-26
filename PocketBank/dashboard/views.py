@@ -7,19 +7,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class DashboardHome(LoginRequiredMixin, ListView):
     model = Account
-    template_name = '/dashboard/dashboard_home.html'
+    template_name = 'dashboard/dashboard_home.html'
     context_object_name = 'accounts'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         transactions = Transaction.objects.filter(account__owner = self.request.user)
-        context["total_income"] = transactions.filter(transaction_type="deposit").aggregate(models.Sum("amount"))["amount__sum"] or 0
-        context["total_expense"] = transactions.filter(transaction_type="withdrawal").aggregate(models.Sum("amount"))["amount__sum"] or 0
+        context["total_income"] = transactions.filter(transaction_type="deposit").aggregate(Sum("amount"))["amount__sum"] or 0
+        context["total_expense"] = transactions.filter(transaction_type="withdrawal").aggregate(Sum("amount"))["amount__sum"] or 0
         return context
     
 class AccountDetails(DetailView):
     model = Account
-    template_name = '/dashboard/account_details.html'
+    template_name = 'dashboard/account_details.html'
     context_object_name = 'account'
 
     def get_queryset(self):
@@ -32,7 +32,7 @@ class AccountDetails(DetailView):
         return context
 class TransactionDetails(DetailView):
     model = Transaction
-    template_name = '/dashboard/transaction_details.html'
+    template_name = 'dashboard/transaction_details.html'
     context_object_name = 'transaction'
 
     def get_queryset(self):
@@ -45,7 +45,7 @@ class TransactionDetails(DetailView):
     
 class CategoryReport(ListView):
     model = TransactionCategory
-    template_name = '/dashboard/transaction_category.html'
+    template_name = 'dashboard/transaction_category.html'
     context_object_name = 'categories' 
 
     def get_queryset(self):
@@ -64,7 +64,7 @@ class CategoryReport(ListView):
 
 class MonthlySummary(ListView):
     model = Transaction
-    template_name = '/dashboard/monthly_summary.html'
+    template_name = 'dashboard/monthly_summary.html'
     context_object_name = 'monthly_data'
 
     def get_queryset(self):

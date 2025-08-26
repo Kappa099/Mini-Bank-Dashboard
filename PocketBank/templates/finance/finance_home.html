@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Finance Dashboard</h2>
+<ul>
+    <li><a href="{% url 'finance_account_list' %}">Accounts</a></li>
+    <li><a href="{% url 'finance_category_list' %}">Categories</a></li>
+    <li><a href="{% url 'finance_transaction_list' %}">Transactions</a></li>
+</ul>
+{% endblock %}

@@ -2,7 +2,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from finance.models import Account  
-
+from django.contrib.auth.forms import UserCreationForm
 
 class AccountListView(LoginRequiredMixin, ListView):
     model = Account
@@ -39,3 +39,8 @@ class AccountDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return Account.objects.filter(owner=self.request.user)
+    
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'registration/register.html'
+    success_url = reverse_lazy('login')
