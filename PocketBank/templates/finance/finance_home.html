@@ -2,9 +2,21 @@
 
 {% block content %}
 <h2>Finance Dashboard</h2>
+
 <ul>
     <li><a href="{% url 'finance_account_list' %}">Accounts</a></li>
     <li><a href="{% url 'finance_category_list' %}">Categories</a></li>
-    <li><a href="{% url 'finance_transaction_list' %}">Transactions</a></li>
+    <li>Transactions per Account:</li>
+    <ul>
+        {% for account in accounts %}
+        <li>
+            <a href="{% url 'finance_transaction_list' account.pk %}">
+                {{ account.name }} Transactions
+            </a>
+        </li>
+        {% empty %}
+        <li>No accounts yet. Create an account to see transactions.</li>
+        {% endfor %}
+    </ul>
 </ul>
 {% endblock %}
