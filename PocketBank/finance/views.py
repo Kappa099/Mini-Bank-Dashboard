@@ -10,7 +10,6 @@ def FinanceHome(request):
     accounts = Account.objects.filter(owner=request.user)
     return render(request, 'finance/finance_home.html', {'accounts': accounts})
 
-# ---------------- Accounts ----------------
 class AccountListView(LoginRequiredMixin, ListView):
     model = Account
     template_name = 'finance/account_list.html'

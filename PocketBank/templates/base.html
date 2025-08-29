@@ -4,19 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Rocket Bank</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
 </head>
 <body>
     <header>
-        <h1>Rocket Bank Dashboard</h1>
+    <h1>{% block page_title %}Rocket Bank{% endblock %}</h1>
         <nav>
-            <a href="{% url 'dashboard_home' %}">Dashboard</a> |
-            <a href="{% url 'categories' %}">Categories</a> |
-            <a href="{% url 'summery' %}">Monthly Summary</a>
-
+            <a href="{% url 'dashboard_home' %}" class="{% if request.path == '/dashboard/' %}active{% endif %}">Dashboard</a> |
+            <a href="{% url 'categories' %}" class="{% if request.path == '/categories/' %}active{% endif %}">Categories</a> |
+            <a href="{% url 'summery' %}" class="{% if request.path == '/summery/' %}active{% endif %}">Monthly Summary</a> |
+            <a href="{% url 'finance_home' %}" class="finance-link {% if request.path == '/finance/' %}active{% endif %}">Finances</a>
         </nav>
         <hr>
     </header>
+
 
     <main>
         {% block content %}
