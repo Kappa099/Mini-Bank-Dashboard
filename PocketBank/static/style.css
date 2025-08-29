@@ -1,9 +1,24 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: "Segoe UI", Roboto, sans-serif;
-    background-color: #f9f9f9;
+    background-color: #f5f6fa;
     margin: 0;
     padding: 0;
     color: #333;
+}
+
+a {
+    color: #4A90E2;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 .container {
@@ -13,13 +28,13 @@ body {
 }
 
 .navbar {
-    background-color: #FF600A;
+    background-color: #4A90E2;
     color: white;
     padding: 12px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 3px solid #e04e00;
+    border-bottom: 3px solid #357ABD;
 }
 
 .navbar a {
@@ -29,24 +44,24 @@ body {
     font-weight: 500;
 }
 
-
 .navbar a:hover {
     text-decoration: underline;
 }
+
 .navbar a.finance-link {
     background-color: white;
-    color: #FF600A;
-    padding: 6px 14px;
-    border-radius: 6px;
+    color: #4A90E2;
+    padding: 8px 18px;
+    border-radius: 8px;
     font-weight: 600;
 }
 
 .navbar a.finance-link:hover {
-    background-color: #ffe7d6;
+    background-color: #e1f0ff;
 }
 
 h1, h2, h3, h4, h5 {
-    color: #FF600A;
+    color: #4A90E2;
     margin-bottom: 10px;
 }
 
@@ -57,29 +72,31 @@ h1, h2, h3, h4, h5 {
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
-    transition: background 0.2s ease-in-out;
+    transition: background 0.2s ease-in-out, transform 0.2s ease-in-out;
     cursor: pointer;
     border: none;
 }
 
 .btn-primary {
-    background-color: #FF600A;
+    background-color: #4A90E2;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #e04e00;
+    background-color: #357ABD;
+    transform: translateY(-1px);
 }
 
-.btn-outline {
+.btn-outline-primary {
     background-color: white;
-    border: 2px solid #FF600A;
-    color: #FF600A;
+    border: 2px solid #4A90E2;
+    color: #4A90E2;
 }
 
-.btn-outline:hover {
-    background-color: #FF600A;
+.btn-outline-primary:hover {
+    background-color: #4A90E2;
     color: white;
+    transform: translateY(-1px);
 }
 
 table {
@@ -89,6 +106,7 @@ table {
     background: white;
     border-radius: 8px;
     overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 th, td {
@@ -98,12 +116,16 @@ th, td {
 }
 
 th {
-    background-color: #FF600A;
+    background-color: #4A90E2;
     color: white;
 }
 
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
 tr:hover {
-    background-color: #f5f5f5;
+    background-color: #e8f0fe;
 }
 
 .card {
@@ -112,13 +134,19 @@ tr:hover {
     border-radius: 12px;
     box-shadow: 0px 2px 6px rgba(0,0,0,0.08);
     margin-bottom: 20px;
+    transition: all 0.2s ease-in-out;
 }
 
-a {
-    color: #FF600A;
-    text-decoration: none;
+.card:hover {
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
 }
 
-a:hover {
-    text-decoration: underline;
+footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: #f5f6fa;
+    color: #777;
+    font-size: 14px;
+    border-top: 1px solid #ddd;
 }
