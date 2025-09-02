@@ -15,10 +15,16 @@ class Account(models.Model):
 ]
     account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPES)
 
+    def __str__(self):
+        return f"{self.name}"
+
 class TransactionCategory(models.Model):
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=7, default='#000000')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 class Transaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
@@ -32,3 +38,6 @@ class Transaction(models.Model):
         ('withdrawal', 'Withdrawal'),
     ]
     transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPE)
+
+    def __str__(self):
+        return f"{self.transaction_type} - ${self.amount} ({self.account.name})"

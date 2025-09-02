@@ -10,12 +10,16 @@ class DashboardHome(LoginRequiredMixin, ListView):
     template_name = 'dashboard/dashboard_home.html'
     context_object_name = 'accounts'
 
+    def get_queryset(self):
+        return Account.objects.filter(owner=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        transactions = Transaction.objects.filter(account__owner = self.request.user)
+        transactions = Transaction.objects.filter(account__owner=self.request.user)
         context["total_income"] = transactions.filter(transaction_type="deposit").aggregate(Sum("amount"))["amount__sum"] or 0
         context["total_expense"] = transactions.filter(transaction_type="withdrawal").aggregate(Sum("amount"))["amount__sum"] or 0
         return context
+
     
 class AccountDetails(DetailView):
     model = Account

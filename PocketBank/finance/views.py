@@ -2,8 +2,11 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import Account, Transaction, TransactionCategory
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.shortcuts import render, get_object_or_404
+
+
 
 @login_required
 def FinanceHome(request):
@@ -49,7 +52,6 @@ class AccountDeleteView(LoginRequiredMixin, DeleteView):
         return Account.objects.filter(owner=self.request.user)
 
 
-# ---------------- Categories ----------------
 class CategoryListView(LoginRequiredMixin, ListView):
     model = TransactionCategory
     template_name = 'finance/category_list.html'
@@ -58,6 +60,19 @@ class CategoryListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return TransactionCategory.objects.filter(user=self.request.user)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for category in context['categories']:
+            category.total_income = Transaction.objects.filter(
+                category=category,
+                transaction_type='deposit'
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+            category.total_expense = Transaction.objects.filter(
+                category=category,
+                transaction_type='withdrawal'
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+        return context
 
 class CategoryCreateView(LoginRequiredMixin, CreateView):
     model = TransactionCategory
@@ -89,7 +104,6 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
         return TransactionCategory.objects.filter(user=self.request.user)
 
 
-# ---------------- Transactions ----------------
 class TransactionListView(LoginRequiredMixin, ListView):
     model = Transaction
     template_name = 'finance/transaction_list.html'
@@ -105,17 +119,36 @@ class TransactionListView(LoginRequiredMixin, ListView):
         return context
 
 
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+
 class TransactionCreateView(LoginRequiredMixin, CreateView):
     model = Transaction
     fields = ['account', 'amount', 'category', 'description', 'date', 'transaction_type']
     template_name = 'finance/transaction_form.html'
 
+    def get_initial(self):
+        initial = super().get_initial()
+        account_id = self.request.GET.get('account')
+        if account_id:
+            initial['account'] = get_object_or_404(Account, pk=account_id, owner=self.request.user)
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['account'].queryset = Account.objects.filter(owner=self.request.user)
+        form.fields['category'].queryset = TransactionCategory.objects.filter(user=self.request.user)
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        account_id = self.request.GET.get('account')
+        if account_id:
+            context['account'] = get_object_or_404(Account, pk=account_id, owner=self.request.user)
+        return context
+
     def get_success_url(self):
         return reverse_lazy('finance_transaction_list', kwargs={'pk': self.object.account.pk})
-
-    def get_queryset(self):
-        return Transaction.objects.filter(account__owner=self.request.user)
-
 
 class TransactionUpdateView(LoginRequiredMixin, UpdateView):
     model = Transaction

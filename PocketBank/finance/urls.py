@@ -5,19 +5,17 @@ from . import views
 urlpatterns = [
     path('', FinanceHome, name='finance_home'),
 
-    # Accounts
     path('accounts/', views.AccountListView.as_view(), name='finance_account_list'),
     path('accounts/new/', views.AccountCreateView.as_view(), name='finance_account_create'),
     path('accounts/<int:pk>/edit/', views.AccountUpdateView.as_view(), name='finance_account_edit'),
     path('accounts/<int:pk>/delete/', views.AccountDeleteView.as_view(), name='finance_account_delete'),
 
-    # Categories
+
     path('categories/', views.CategoryListView.as_view(), name='finance_category_list'),
     path('categories/new/', views.CategoryCreateView.as_view(), name='finance_category_create'),
     path('categories/<int:pk>/edit/', views.CategoryUpdateView.as_view(), name='finance_category_edit'),
     path('categories/<int:pk>/delete/', views.CategoryDeleteView.as_view(), name='finance_category_delete'),
 
-    # Transactions
     path('account/<int:pk>/transactions/', views.TransactionListView.as_view(), name='finance_transaction_list'),
     path('transactions/new/', views.TransactionCreateView.as_view(), name='finance_transaction_create'),
     path('transactions/<int:pk>/edit/', views.TransactionUpdateView.as_view(), name='finance_transaction_edit'),
