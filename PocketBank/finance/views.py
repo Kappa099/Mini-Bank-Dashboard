@@ -1,4 +1,4 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import Account, Transaction, TransactionCategory
@@ -42,6 +42,25 @@ class AccountUpdateView(LoginRequiredMixin, UpdateView):
     def get_queryset(self):
         return Account.objects.filter(owner=self.request.user)
 
+
+class AccountDetailView(LoginRequiredMixin, DetailView):
+    model = Account
+    template_name = 'finance/account_detail.html'
+    context_object_name = 'account'
+
+    def get_queryset(self):
+        return Account.objects.filter(owner=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        account = self.object
+
+        context['transactions'] = Transaction.objects.filter(account=account)
+
+        context['total_income'] = context['transactions'].filter(transaction_type='deposit').aggregate(Sum('amount'))['amount__sum'] or 0
+        context['total_expense'] = context['transactions'].filter(transaction_type='withdrawal').aggregate(Sum('amount'))['amount__sum'] or 0
+
+        return context
 
 class AccountDeleteView(LoginRequiredMixin, DeleteView):
     model = Account

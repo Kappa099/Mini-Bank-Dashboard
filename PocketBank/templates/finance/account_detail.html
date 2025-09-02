@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ account.name }} ({{ account.get_account_type_display }})</h2>
+<p>Balance: ${{ account.balance }}</p>
+
+<h3>Transactions</h3>
+<a href="{% url 'finance_transaction_create' %}?account={{ account.pk }}" class="btn btn-success mb-3">
+  + Add Transaction
+</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.get_transaction_type_display }}</td>
+            <td>{{ transaction.category.name }}</td>
+            <td>${{ transaction.amount }}</td>
+            <td>{{ transaction.description }}</td>
+            <td>
+                <a href="{% url 'finance_transaction_edit' transaction.pk %}">Edit</a> |
+                <a href="{% url 'finance_transaction_delete' transaction.pk %}">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No transactions yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p>Total Income: ${{ total_income }} | Total Expense: ${{ total_expense }}</p>
+{% endblock %}
