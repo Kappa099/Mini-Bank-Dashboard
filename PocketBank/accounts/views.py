@@ -1,8 +1,9 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from finance.models import Account  
 from django.contrib.auth.forms import UserCreationForm
+from .models import UserProfile
 
 class AccountListView(LoginRequiredMixin, ListView):
     model = Account
@@ -44,3 +45,20 @@ class RegisterView(CreateView):
     form_class = UserCreationForm
     template_name = 'registration/register.html'
     success_url = reverse_lazy('login')
+
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = UserProfile
+    template_name = 'accounts/profile_detail.html'
+
+    def get_object(self):
+        return self.request.user.userprofile
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = UserProfile
+    fields = ['full_name', 'phone_number', 'profile_picture']
+    template_name = 'accounts/profile_form.html'
+    success_url = reverse_lazy('profile_detail')
+
+    def get_object(self):
+        return self.request.user.userprofile
